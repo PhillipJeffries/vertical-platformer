@@ -2,6 +2,8 @@ const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576
+
+
 // console.log(canvas)
 
 const keys = {
@@ -14,6 +16,24 @@ const keys = {
 }
 
 const gravity = 1
+
+
+class Sprite {
+    constructor({position, imageSrc}) {
+        this.position = position
+        this.image = new Image()
+        this.image.src = imageSrc
+    }
+
+    draw() {
+        if (!this.image) return
+        c.drawImage(this.image, this.position.x, this.position.y)
+    }
+    update() {
+        this.draw()
+    }
+}
+
 
 class Player {
     constructor(position, velocity = {x: 0, y: 0}) {
@@ -43,12 +63,28 @@ const player = new Player({x: 0, y: 0})
 const player2 = new Player({x: 150, y: 0})
 
 
+const background = new Sprite({
+    position: {
+        x: 0,
+        y: 0
+    },
+    imageSrc: './img/background.png'
+})
+
+
 
 const animate = () => {
     window.requestAnimationFrame(animate)
 
     c.fillStyle = 'white'
     c.fillRect(0, 0, canvas.width, canvas.height)
+
+    c.save()
+    c.scale(4, 4)
+    c.translate(0, -background.image.height + canvas.height/4)
+    background.update()
+    c.restore()
+
     player.update()
     player2.update()
 
