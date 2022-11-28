@@ -1,0 +1,1 @@
+This tileset is 12x12. Slice the asset pack by 12x12 tiles and the tiles should be in the right place. Parts like the houses, trees, grass etc. should not be treated as tiles, and should be positioned to fit the scene where appropriate. 
