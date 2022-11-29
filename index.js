@@ -3,8 +3,50 @@ const c = canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576
 
+const floorCollisions2D = []
 
-// console.log(canvas)
+for(let i = 0; i<floorCollisions.length; i+=36){
+    floorCollisions2D.push(floorCollisions.slice(i, i+36))
+    // console.log(floorCollisions2D)
+}
+
+
+const collisionBlocks = []
+
+floorCollisions2D.forEach((row, y) => {
+    row.forEach((symbol, x)=>{
+        // console.log(symbol)
+        if(symbol === 973) {
+            // console.log("draw here")
+            collisionBlocks.push(new CollisionBlock({x:x*16, y:y*16}))
+        }
+
+    })
+})
+
+const platformCollisions2D = []
+
+for(let i = 0; i<platformCollisions.length; i+=36){
+    platformCollisions2D.push(platformCollisions.slice(i, i+36))
+}
+console.log("platform collisions array", platformCollisions2D)
+
+
+const platformCollisionBlocks = []
+
+platformCollisions2D.forEach((row, y) => {
+    row.forEach((symbol, x)=>{
+        // console.log(symbol)
+        if(symbol === 973) {
+            // console.log("draw here")
+            platformCollisionBlocks.push(new CollisionBlock({x:x*16, y:y*16}))
+        }
+
+    })
+})
+
+
+// console.log(collisionBlocks)
 
 const keys = {
     d: {
@@ -18,49 +60,12 @@ const keys = {
 const gravity = 1
 
 
-class Sprite {
-    constructor({position, imageSrc}) {
-        this.position = position
-        this.image = new Image()
-        this.image.src = imageSrc
-    }
-
-    draw() {
-        if (!this.image) return
-        c.drawImage(this.image, this.position.x, this.position.y)
-    }
-    update() {
-        this.draw()
-    }
-}
 
 
-class Player {
-    constructor(position, velocity = {x: 0, y: 0}) {
-        this.position = position
-        this.velocity = velocity
-        this.height = 100
-    }
 
-    draw() {
-        c.fillStyle = 'red'
-        c.fillRect(this.position.x, this.position.y, 100, this.height)
-    }
 
-    update() {
-        this.draw()
-        this.position.y += this.velocity.y
-        this.position.x += this.velocity.x
-        if (this.position.y + this.height + this.velocity.y < canvas.height) 
-            this.velocity.y += gravity
-        else this.velocity.y = 0
-        
-    }
-
-}
-
-const player = new Player({x: 0, y: 0})
-const player2 = new Player({x: 150, y: 0})
+const player = new Player({x: 200, y: 0}, platformCollisionBlocks )
+// const player2 = new Player({x: 150, y: 0})
 
 
 const background = new Sprite({
@@ -83,10 +88,22 @@ const animate = () => {
     c.scale(4, 4)
     c.translate(0, -background.image.height + canvas.height/4)
     background.update()
+    
+    collisionBlocks.forEach((collisionBlock)=>{
+        collisionBlock.update()
+    })
+
+    platformCollisionBlocks.forEach((block)=>{
+        block.update()
+    })
+    
     c.restore()
 
+    
+
+
+
     player.update()
-    player2.update()
 
     player.velocity.x = 0
     if(keys.d.pressed) player.velocity.x = 1
@@ -123,3 +140,5 @@ window.addEventListener('keyup', (e)=>{
             break
     }
 })
+
+// console.log(floorCollisions)
