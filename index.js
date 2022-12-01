@@ -18,7 +18,7 @@ for(let i = 0; i < floorCollisions.length; i += 36){
     // console.log(floorCollisions2D)
 }
 
-console.log("floorCollisions2d length", floorCollisions2D.length)
+// console.log("floorCollisions2d length", floorCollisions2D.length)
 
 const collisionBlocks = []
 
@@ -26,7 +26,7 @@ floorCollisions2D.forEach((row, y) => {
     row.forEach((symbol, x)=>{
         // console.log(symbol)
         if(symbol === 1729) {
-            console.log("draw here", x)
+            // console.log("draw here", x)
             collisionBlocks.push(
                 new CollisionBlock(c, {x:x*16, y:y*16})
             )
@@ -40,7 +40,7 @@ const platformCollisions2D = []
 for(let i = 0; i<platformCollisions.length; i+=36){
     platformCollisions2D.push(platformCollisions.slice(i, i+36))
 }
-console.log("platform collisions array", platformCollisions2D)
+// console.log("platform collisions array", platformCollisions2D)
 
 
 const platformCollisionBlocks = []
@@ -67,11 +67,13 @@ platformCollisions2D.forEach((row, y) => {
 
 const player = new Player({
     c, 
-    position: {x: 100, y: 0}, 
+    position: {x: 100, y: 300}, 
     collisionBlocks, 
     gravity,
-    imageSrc: "./img/warrior/Idle.png"
+    imageSrc: "./img/warrior/Idle.png",
+    frameRate: 8
 })
+
 // const player2 = new Player({x: 150, y: 0})
 
 
@@ -118,6 +120,7 @@ const animate = () => {
 
     if(keys.d.pressed) {
         
+        // player.velocity.x += acceleration
         player.velocity.x += acceleration
 
     }
@@ -140,7 +143,7 @@ window.addEventListener('keydown', (e)=>{
     switch (e.key){
         case 'd':
             keys.d.pressed = true
-            console.log(keys.d)
+            // console.log(keys.d)
             break
         case 'a':
             keys.a.pressed = true
@@ -156,7 +159,7 @@ window.addEventListener('keyup', (e)=>{
     switch (e.key){
         case 'd':
             keys.d.pressed = false
-            console.log(keys.d)
+            // console.log(keys.d)
             break
         case 'a':
             keys.a.pressed = false
@@ -165,3 +168,5 @@ window.addEventListener('keyup', (e)=>{
 })
 
 // console.log(floorCollisions)
+
+// console.log(c)
