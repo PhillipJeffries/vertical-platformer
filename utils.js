@@ -1,4 +1,4 @@
-function collision ({
+export function collision ({
     object1,
     object2
 }) {
