@@ -6,6 +6,10 @@ export class Sprite {
         this.image.src = imageSrc
     }
 
+    check(){
+        console.log(this.c)
+    }
+
     draw() {
         if (!this.image) return
         this.c.drawImage(this.image, this.position.x, this.position.y)

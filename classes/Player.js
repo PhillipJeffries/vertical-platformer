@@ -1,7 +1,9 @@
 import { collision } from "../utils.js"
+import { Sprite } from "./Sprite.js"
 
-export class Player {
-    constructor(c, position, collisionBlocks, gravity ) {
+export class Player extends Sprite {
+    constructor({c, position, collisionBlocks, gravity, imageSrc }) {
+        super({imageSrc})
         this.c = c
         this.position = position
         this.velocity = {x: 0, y: 0}
@@ -11,13 +13,14 @@ export class Player {
         this.gravity = gravity
     }
 
-    draw() {
-        this.c.fillStyle = 'red'
-        this.c.fillRect(this.position.x, this.position.y, this.width, this.height)
-    }
+    // draw() {
+    //     this.c.fillStyle = 'red'
+    //     this.c.fillRect(this.position.x, this.position.y, this.width, this.height)
+    // }
 
     update() {
         this.draw()
+        this.check()
         
         this.position.x += this.velocity.x
         this.checkForHorisontalCollisions()

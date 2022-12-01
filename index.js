@@ -58,26 +58,20 @@ platformCollisions2D.forEach((row, y) => {
     })
 })
 
-
-// console.log(collisionBlocks)
-
-// const keys = {
-//     d: {
-//         pressed: false
-//     },
-//     a: {
-//         pressed: false
-//     }
-// }
-
-// const gravity = 1
+ 1
 
 
 
 
 
 
-const player = new Player(c, {x: 100, y: 0}, collisionBlocks, gravity )
+const player = new Player({
+    c, 
+    position: {x: 100, y: 0}, 
+    collisionBlocks, 
+    gravity,
+    imageSrc: "./img/warrior/Idle.png"
+})
 // const player2 = new Player({x: 150, y: 0})
 
 
