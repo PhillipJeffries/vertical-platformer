@@ -71,7 +71,49 @@ const player = new Player({
     collisionBlocks, 
     gravity,
     imageSrc: "./img/warrior/Idle.png",
-    frameRate: 8
+    frameRate: 8,
+    animations: {
+        Idle: {
+            imageSrc: './img/warrior/Idle.png',
+            frameRate: 8,
+            frameBuffer: 3
+        },
+        IdleLeft: {
+            imageSrc: './img/warrior/IdleLeft.png',
+            frameRate: 8,
+            frameBuffer: 3
+        },
+        Jump: {
+            imageSrc: './img/warrior/Jump.png',
+            frameRate: 2,
+            frameBuffer: 3,
+        },
+        JumpLeft: {
+            imageSrc: './img/warrior/JumpLeft.png',
+            frameRate: 2,
+            frameBuffer: 3,
+        },
+        Fall: {
+            imageSrc: './img/warrior/Fall.png',
+            frameRate: 2,
+            frameBuffer: 3
+        },
+        FallLeft: {
+            imageSrc: './img/warrior/FallLeft.png',
+            frameRate: 2,
+            frameBuffer: 3
+        },
+        Run: {
+            imageSrc: './img/warrior/Run.png',
+            frameRate: 8,
+            frameBuffer: 3
+        },
+        RunLeft: {
+            imageSrc: './img/warrior/RunLeft.png',
+            frameRate: 8,
+            frameBuffer: 2
+        }
+    }
 })
 
 // const player2 = new Player({x: 150, y: 0})
@@ -114,19 +156,38 @@ const animate = () => {
     let acceleration = .3
 
     if(!keys.a.pressed && !keys.d.pressed){
+        // player.switchSprite('Idle')
         player.velocity.x = 0 //to stop player after movement
 
     }
 
+
+
     if(keys.d.pressed) {
-        
+        player.switchSprite('Run')
         // player.velocity.x += acceleration
         player.velocity.x += acceleration
-
+        player.lastDirection = 'right'
     }
-    else if (keys.a.pressed) player.velocity.x = player.velocity.x - acceleration
+    else if (keys.a.pressed) {
+        player.switchSprite('RunLeft')
+        player.velocity.x = player.velocity.x - acceleration
+        player.lastDirection = 'left'
+    }
+    
+    else if (player.velocity.y === 0) {
+        if (player.lastDirection === 'right') player.switchSprite('Idle')
+            else player.switchSprite('IdleLeft')
+    }
 
-
+    if (player.velocity.y < 0) {
+        if (player.lastDirection === "right") player.switchSprite('Jump')
+            else (player.switchSprite('JumpLeft'))
+    }
+    else if (player.velocity.y > 0){
+        if (player.lastDirection === "right") player.switchSprite('Fall')
+        else player.switchSprite('FallLeft')
+    }
     c.restore()
     
     

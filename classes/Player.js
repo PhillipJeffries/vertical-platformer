@@ -2,7 +2,7 @@ import { collision } from "../utils.js"
 import { Sprite } from "./Sprite.js"
 
 export class Player extends Sprite {
-    constructor({c, position, collisionBlocks, gravity, imageSrc, frameRate, scale = .5 }) {
+    constructor({c, position, collisionBlocks, gravity, imageSrc, frameRate, scale = .5, animations }) {
         super({imageSrc, frameRate, scale})
         this.c = c
         this.position = position
@@ -19,6 +19,24 @@ export class Player extends Sprite {
             width: 10,
             height: 10
         }
+
+        this.animations = animations
+        this.lastDirection = "right"
+
+        for ( let key in this.animations ) {
+            const image = new Image()
+            image.src = this.animations[key].imageSrc
+
+            this.animations[key].image = image
+        }
+
+    }
+
+    switchSprite(key){
+        if (this.image === this.animations[key] || !this.loaded) return
+        this.image = this.animations[key].image
+        this.frameBuffer = this.animations[key].frameBuffer
+        this.frameRate = this.animations[key].frameRate
     }
 
     
@@ -32,19 +50,19 @@ export class Player extends Sprite {
         this.updateHitbox()
 
 
-        this.c.fillStyle = 'rgba(0, 255, 0, .3)'
-        this.c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        // this.c.fillStyle = 'rgba(0, 255, 0, .3)'
+        // this.c.fillRect(this.position.x, this.position.y, this.width, this.height)
         // this.c.lineWidth = 50
         // this.c.strokeStyle = "rgba(32, 190, 50, .5)"
         // this.c.strokeRect(this.position.x, this.position.y, this.width, this.height)
 
-        this.c.fillStyle = 'rgba(0, 255, 0, .2)'
-        this.c.fillRect(
-            this.hitbox.position.x,
-            this.hitbox.position.y,
-            this.hitbox.width,
-            this.hitbox.height,
-        )
+        // this.c.fillStyle = 'rgba(0, 255, 0, .2)'
+        // this.c.fillRect(
+        //     this.hitbox.position.x,
+        //     this.hitbox.position.y,
+        //     this.hitbox.width,
+        //     this.hitbox.height,
+        // )
 
         this.draw()
         this.check()
@@ -101,8 +119,8 @@ export class Player extends Sprite {
 
     
     applyGravity() {
-        this.position.y += this.velocity.y
         this.velocity.y += this.gravity
+        this.position.y += this.velocity.y
     }
 
 
