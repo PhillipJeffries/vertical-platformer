@@ -1,9 +1,9 @@
 export class CollisionBlock {
-    constructor(c, position) {
+    constructor(c, position, width=16, height=16) {
         this.c = c
         this.position = position
-        this.width = 16
-        this.height = 16
+        this.width = width
+        this.height = height
     }
 
     draw() {

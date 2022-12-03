@@ -4,10 +4,13 @@ const keys = {
     },
     a: {
         pressed: false
+    },
+    w: {
+        pressed: false
     }
 }
 
-const gravity = 1
+const gravity = .5
 
 
 export {keys, gravity}

@@ -1,8 +1,9 @@
-import { collision } from "../utils.js"
+import { collision, platformCollision } from "../utils.js"
 import { Sprite } from "./Sprite.js"
 
+
 export class Player extends Sprite {
-    constructor({c, position, collisionBlocks, gravity, imageSrc, frameRate, scale = .5, animations }) {
+    constructor({c, position, collisionBlocks, platformCollisionBlocks, gravity, imageSrc, frameRate, scale = 1, animations }) {
         super({imageSrc, frameRate, scale})
         this.c = c
         this.position = position
@@ -10,6 +11,7 @@ export class Player extends Sprite {
         // this.width = 100/4
         // this.height = 100/4
         this.collisionBlocks = collisionBlocks
+        this.platformCollisionBlocks = platformCollisionBlocks
         this.gravity = gravity
         this.hitbox = {
             position: {
@@ -30,14 +32,98 @@ export class Player extends Sprite {
             this.animations[key].image = image
         }
 
+        this.cameraBox = {
+            position: {
+                x: this.position.x,
+                y: this.position.y
+            },
+            width: 500,
+            height: 400
+        }
     }
 
+
     switchSprite(key){
-        if (this.image === this.animations[key] || !this.loaded) return
+        if (this.image === this.animations[key].image || !this.loaded) return
+
+        this.currentFrame = 0
+
         this.image = this.animations[key].image
         this.frameBuffer = this.animations[key].frameBuffer
         this.frameRate = this.animations[key].frameRate
     }
+
+
+    updateCameraBox() {
+        this.cameraBox = {
+            position: {
+                x: this.position.x +140,
+                y: this.position.y + 150
+            },
+            width: 500,
+            height: 500
+        }
+    }
+
+
+    checkForHorisontalCanvasCollision(){
+        if (this.hitbox.position.x + this.hitbox.width + this.velocity.x >= 1536 || 
+            this.hitbox.position.x + this.velocity.x <= 0
+            ){
+            this.velocity.x = 0
+        }
+        // if (this.hitbox.position.x < 0){
+        //     this.velocity.x = 0
+        // }
+    }
+
+
+    shouldPanCameraToTheLeft({canvas, camera}){
+        const cameraboxRightSide = this.cameraBox.position.x + this.cameraBox.width
+        const scaledDownCanvasWidth = canvas.width
+        if(cameraboxRightSide >= 1536) return
+
+        if(cameraboxRightSide >= scaledDownCanvasWidth + Math.abs(camera.position.x)){
+            camera.position.x -= this.velocity.x
+            console.log('left')
+        }
+
+    }
+
+    shouldPanCameraToTheRight({canvas, camera}){
+        if(this.cameraBox.position.x <= 0) return
+
+        if(this.cameraBox.position.x <= Math.abs(camera.position.x)){
+            camera.position.x -= this.velocity.x
+        }
+
+    }
+
+    shouldPanCameraDown({canvas, camera}){
+        if(this.cameraBox.position.y + this.velocity.y <= 0) return
+
+        if(this.cameraBox.position.y <= Math.abs(camera.position.y)){
+            camera.position.y -= this.velocity.y
+        }
+
+    }
+
+    shouldPanCameraUp({canvas, camera}){
+        // if(this.cameraBox.position.y + this.velocity.y <= 0) return
+
+        const scaledCanvasHeight = canvas.height
+
+        if(this.cameraBox.position.y + this.cameraBox.height >= 
+            Math.abs(camera.position.y) + scaledCanvasHeight
+            )
+        {
+            camera.position.y -= this.velocity.y
+        }
+
+    }
+
+
+    
 
     
     // draw() {
@@ -48,6 +134,7 @@ export class Player extends Sprite {
     update() {
         this.updateFrames()
         this.updateHitbox()
+        this.updateCameraBox()
 
 
         // this.c.fillStyle = 'rgba(0, 255, 0, .3)'
@@ -56,12 +143,20 @@ export class Player extends Sprite {
         // this.c.strokeStyle = "rgba(32, 190, 50, .5)"
         // this.c.strokeRect(this.position.x, this.position.y, this.width, this.height)
 
-        // this.c.fillStyle = 'rgba(0, 255, 0, .2)'
+        // this.c.fillStyle = 'rgba(0, 0, 255, .2)'
         // this.c.fillRect(
         //     this.hitbox.position.x,
         //     this.hitbox.position.y,
         //     this.hitbox.width,
         //     this.hitbox.height,
+        // )
+
+        // this.c.fillStyle = 'rgba(0, 255, 0, .2)'
+        // this.c.fillRect(
+        //     this.cameraBox.position.x,
+        //     this.cameraBox.position.y,
+        //     this.cameraBox.width,
+        //     this.cameraBox.height,
         // )
 
         this.draw()
@@ -77,11 +172,11 @@ export class Player extends Sprite {
     updateHitbox() {
         this.hitbox = {
             position: {
-                x: this.position.x + 35,
-                y: this.position.y + 26,
+                x: this.position.x + 355,
+                y: this.position.y + 220
             },
-            width: 14,
-            height: 27
+            width: 80,
+            height: 280
         }
     }
 
@@ -91,7 +186,7 @@ export class Player extends Sprite {
             const collisionBlock = this.collisionBlocks[i]
 
             if(
-                collision({
+                platformCollision({
                     object1: this.hitbox,
                     object2: collisionBlock
                 })
@@ -148,6 +243,28 @@ export class Player extends Sprite {
 
                     this.position.y = collisionBlock.position.y + collisionBlock.height - offset + .01
                 }
+                // console.log("collision")
+            }
+        }
+
+        //platformCollisionBlocks
+        for(let i = 0; i < this.platformCollisionBlocks.length; i++){
+            const platformCollisionBlock = this.platformCollisionBlocks[i]
+
+            if(
+                collision({
+                    object1: this.hitbox,
+                    object2: platformCollisionBlock
+                })
+            ){
+                if (this.velocity.y > 0) { //if collision below
+                    this.velocity.y = 0
+
+                    const offset = this.hitbox.position.y - this.position.y + this.hitbox.height
+
+                    this.position.y = platformCollisionBlock.position.y - offset - .01
+                }
+                
                 // console.log("collision")
             }
         }
