@@ -35,7 +35,7 @@ export class Player extends Sprite {
         this.cameraBox = {
             position: {
                 x: this.position.x,
-                y: this.position.y
+                y: this.position.y + this.height
             },
             width: 500,
             height: 400
@@ -151,13 +151,13 @@ export class Player extends Sprite {
         //     this.hitbox.height,
         // )
 
-        // this.c.fillStyle = 'rgba(0, 255, 0, .2)'
-        // this.c.fillRect(
-        //     this.cameraBox.position.x,
-        //     this.cameraBox.position.y,
-        //     this.cameraBox.width,
-        //     this.cameraBox.height,
-        // )
+        this.c.fillStyle = 'rgba(0, 255, 0, .2)'
+        this.c.fillRect(
+            this.cameraBox.position.x,
+            this.cameraBox.position.y,
+            this.cameraBox.width,
+            this.cameraBox.height,
+        )
 
         this.draw()
         this.check()

@@ -139,7 +139,7 @@ const background = new Sprite(
 const camera = {
     position: {
         x: 0,
-        y: -background.image.height + canvas.height
+        y: -background.image.height + canvas.height * 1.5
     }
 }
 
