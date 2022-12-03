@@ -160,11 +160,12 @@ export class Player extends Sprite {
         // )
 
         this.draw()
-        this.check()
+        // this.check()
         
         this.position.x += this.velocity.x
-        this.applyGravity()
+        this.updateHitbox()
         this.checkForHorisontalCollisions()
+        this.applyGravity()
         this.updateHitbox()
         this.checkForVerticalCollisions()  
     }
@@ -182,27 +183,28 @@ export class Player extends Sprite {
 
 
     checkForHorisontalCollisions() {
-        for(let i = 0; i < this.collisionBlocks.length; i++){
-            const collisionBlock = this.collisionBlocks[i]
+        for(let i = 0; i < this.platformCollisionBlocks.length; i++){
+            const platformCollisionBlock = this.platformCollisionBlocks[i]
 
             if(
-                platformCollision({
+                collision({
                     object1: this.hitbox,
-                    object2: collisionBlock
+                    object2: platformCollisionBlock
                 })
             ){
+            
                 if (this.velocity.x > 0) {
                     this.velocity.x = 0
 
                     const offset = this.hitbox.position.x - this.position.x + this.hitbox.width
 
-                    this.position.x = collisionBlock.position.x - offset - .01
+                    this.position.x = platformCollisionBlock.position.x - offset - .01
                     break
                 }
                 if (this.velocity.x < 0) {
                     this.velocity.x = 0
                     const offset = this.hitbox.position.x - this.position.x
-                    this.position.x = collisionBlock.position.x + collisionBlock.width - offset + .01
+                    this.position.x = platformCollisionBlock.position.x + platformCollisionBlock.width - offset + .01
                     break
                 }
                 // console.log("collision")
