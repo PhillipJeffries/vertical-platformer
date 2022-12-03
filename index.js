@@ -8,8 +8,8 @@ import { keys,gravity } from "./data/data.js"
 
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
-canvas.width = 1536
-canvas.height = 976
+canvas.width = window.innerWidth < 1536 ? window.innerWidth : 1536
+canvas.height = window.innerHeight - 100
 
 export const bgSize = {
     width: 1536,
